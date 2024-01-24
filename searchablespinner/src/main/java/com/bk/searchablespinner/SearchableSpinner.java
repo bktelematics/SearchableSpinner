@@ -12,13 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchableSpinner<T> extends Spinner {
     public static final int NO_ITEM_SELECTED = -1;
     private Context _context;
-    private List _items;
     private SearchableListDialog _searchableListDialog;
     private String _strHintText;
     int spinnerColor;
@@ -35,7 +36,7 @@ public class SearchableSpinner<T> extends Spinner {
                 _strHintText = a.getString(attr);
             }
             if (attr == R.styleable.SearchableSpinner_color) {
-                //spinnerColor =  a.getColor(attr,getResources().getColor(R.color.green));
+                spinnerColor =  a.getColor(attr,getResources().getColor(R.color.selectedColor));
             }
         }
         a.recycle();
@@ -47,27 +48,17 @@ public class SearchableSpinner<T> extends Spinner {
         this._context = context;
         init();
     }
-    public void updateItems(List<T> items, RecyclerView.Adapter<?> adapter) {
-        _items.clear();
-        _items.addAll(items);
-        _searchableListDialog = SearchableListDialog.newInstance(_items);
+    public void setCustomAdapter(RecyclerView.Adapter<?> adapter){
         _searchableListDialog.show(scanForActivity(_context).getSupportFragmentManager(), "");
         _searchableListDialog.setAdapter(adapter);
-        _searchableListDialog.setItems(items);
     }
 
 //    @Override
 //    public boolean performClick() {
-//        if(Common.isNetworkAvailable(_context)){
-//            ((VehicleListViewModel) viewModel).getCustomers();
-//        }
-//        else
-//            Snackbar.make(_context,getRootView(), "Δεν υπάρχει σύνδεση στο δίκτυο.",Snackbar.LENGTH_SHORT).show();
 //        return true;
 //    }
     private void init() {
-        _items = new ArrayList();
-        _searchableListDialog = SearchableListDialog.newInstance(_items);
+        _searchableListDialog = new SearchableListDialog();
         if (!TextUtils.isEmpty(_strHintText)) {
             ArrayAdapter arrayAdapter = new ArrayAdapter(_context, android.R.layout.simple_spinner_dropdown_item, new String[]{_strHintText});
             _isFromInit = true;

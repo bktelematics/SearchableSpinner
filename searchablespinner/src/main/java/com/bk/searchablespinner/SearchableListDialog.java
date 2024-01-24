@@ -21,30 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchableListDialog<T> extends DialogFragment implements SearchView.OnCloseListener {
-
-    private static final String ITEMS = "items";
-
     private RecyclerView rvItem;
     private SearchView svItem;
     RecyclerView.Adapter myadapter;
     private List<T> myItems;
+
     public SearchableListDialog() {
-
-    }
-
-    public static SearchableListDialog newInstance(List items) {
-        SearchableListDialog multiSelectExpandableFragment = new SearchableListDialog();
-        Bundle args = new Bundle();
-        args.putSerializable(ITEMS, (Serializable) items);
-        multiSelectExpandableFragment.setArguments(args);
-        return multiSelectExpandableFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        View view = LayoutInflater.from(requireContext()).inflate(R.layout.searchable_spinner, null);
-        svItem = view.findViewById(R.id.svItem);
-        rvItem = view.findViewById(R.id.rvItem);
         super.onCreate(savedInstanceState);
     }
 
@@ -56,12 +42,15 @@ public class SearchableListDialog<T> extends DialogFragment implements SearchVie
         return view;
     }
 
+    public void HideKeyboard(View view){
+        InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         svItem = view.findViewById(R.id.svItem);
         rvItem = view.findViewById(R.id.rvItem);
-
         rvItem.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -86,15 +75,8 @@ public class SearchableListDialog<T> extends DialogFragment implements SearchVie
 //            }
 //        });
     }
-    public void HideKeyboard(View view){
-        InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
     public void setAdapter(RecyclerView.Adapter adapter){
         myadapter = adapter;
-    }
-    public void setItems(List<T> items){
-        myItems = items;
     }
 
     @Override
@@ -137,7 +119,6 @@ public class SearchableListDialog<T> extends DialogFragment implements SearchVie
     public interface SearchableItem<T> extends Serializable {
         void onSearchableItemClicked(T item);
     }
-
     public interface OnSearchTextChanged {
         void onSearchTextChanged(String strText);
     }
