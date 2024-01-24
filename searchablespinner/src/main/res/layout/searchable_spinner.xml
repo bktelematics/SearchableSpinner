@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
+    android:clickable="true">
+
+    <SearchView
+        android:id="@+id/svItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search..."
+        android:searchIcon="@null" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollbars="vertical"
+        android:scrollbarSize="12dp"
+        android:scrollbarStyle="outsideInset"
+        android:fadeScrollbars="false"/>
+
+</LinearLayout>
