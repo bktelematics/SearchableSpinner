@@ -48,7 +48,7 @@ public class SearchableSpinner<T> extends Spinner {
         this._context = context;
         init();
     }
-    public void setCustomAdapter(RecyclerView.Adapter<?> adapter) {
+    public void setCustomAdapter(FilterableAdapter adapter) {
         if (!_searchableListDialog.isAdded()) {
             _searchableListDialog.show(scanForActivity(_context).getSupportFragmentManager(), "SearchableListDialog");
             _searchableListDialog.setAdapter(adapter);
@@ -105,7 +105,4 @@ public class SearchableSpinner<T> extends Spinner {
         _searchableListDialog.dismiss();
     }
 
-    public void setItems(List<T> items) {
-        _searchableListDialog.setItems(items);
-    }
 }

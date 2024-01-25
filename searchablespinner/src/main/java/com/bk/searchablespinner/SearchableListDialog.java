@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -20,11 +21,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchableListDialog<T extends SearchableListDialog.SearchableObject> extends DialogFragment implements SearchView.OnCloseListener {
+public class SearchableListDialog<T extends SearchableObject> extends DialogFragment implements SearchView.OnCloseListener {
     private RecyclerView rvItem;
     private SearchView svItem;
-    RecyclerView.Adapter myadapter;
-    private List<T> myItems;
+    private FilterableAdapter myadapter;
 
     public SearchableListDialog() {
     }
@@ -75,7 +75,7 @@ public class SearchableListDialog<T extends SearchableListDialog.SearchableObjec
             }
         });
     }
-    public void setAdapter(RecyclerView.Adapter adapter){
+    public void setAdapter(FilterableAdapter adapter){
         myadapter = adapter;
     }
 
@@ -91,34 +91,25 @@ public class SearchableListDialog<T extends SearchableListDialog.SearchableObjec
         dismiss();
     }
     private void filter(String text) {
-        ArrayList<T> filteredList = new ArrayList<>();
-        for (T item : myItems) {
-            String itemText = item.toSearchableString();
+        ArrayList<SearchableObject> filteredList = new ArrayList<>();
+        for (Object item : myadapter.getItems()) {
+            String itemText = ((SearchableObject)item).toSearchableString();
             if (itemText.toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(item);
+                filteredList.add((SearchableObject) item);
             }
         }
-        if (myadapter instanceof FilterableAdapter) {
-            ((FilterableAdapter<T>) myadapter).updateData(filteredList);
-        }
+
+//        for (T item : myadapter.getItems()) {
+//            String itemText = item.toSearchableString();
+//            if (itemText.toLowerCase().contains(text.toLowerCase())) {
+//                filteredList.add(item);
+//            }
+//        }
+//        if (myadapter instanceof FilterableAdapter) {
+//            ((FilterableAdapter<T>) myadapter).updateData(filteredList);
+//        }
     }
 
-    public void setItems(List<T> items){
-        myItems = items;
-    }
-    // }
 
-    public interface SearchableItem<T> extends Serializable {
-        void onSearchableItemClicked(T item);
-    }
-    public interface SearchableObject {
-        String toSearchableString();
-    }
 
-    public interface FilterableAdapter<T> {
-        void updateData(ArrayList<T> newData);
-    }
-    public interface OnSearchTextChanged {
-        void onSearchTextChanged(String strText);
-    }
 }
