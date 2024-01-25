@@ -10,23 +10,21 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SearchableListDialog<T extends SearchableObject> extends DialogFragment implements SearchView.OnCloseListener {
     private RecyclerView rvItem;
     private SearchView svItem;
-    private FilterableAdapter myadapter;
+    private SearchableAdapter myadapter;
 
-    public SearchableListDialog() {
+    public SearchableListDialog(SearchableAdapter adapter){
+        myadapter = adapter;
     }
 
     @Override
@@ -75,9 +73,9 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
             }
         });
     }
-    public void setAdapter(FilterableAdapter adapter){
-        myadapter = adapter;
-    }
+    //public void setAdapter(SearchableAdapter adapter){
+//        myadapter = adapter;
+//    }
 
     @Override
     public boolean onClose() {
@@ -98,6 +96,7 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
                 filteredList.add((SearchableObject) item);
             }
         }
+        //myadapter.updateData(filteredList);
 
 //        for (T item : myadapter.getItems()) {
 //            String itemText = item.toSearchableString();

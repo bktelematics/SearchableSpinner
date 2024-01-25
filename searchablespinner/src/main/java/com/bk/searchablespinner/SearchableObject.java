@@ -1,5 +1,9 @@
 package com.bk.searchablespinner;
 
-public interface SearchableObject {
+import java.io.Serializable;
+
+public interface SearchableObject extends Serializable {
+    SearchableObject onSearchableItemClicked();
+
     String toSearchableString();
 }
