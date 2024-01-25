@@ -1,13 +1,16 @@
 package com.bk.searchablespinner;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.SearchView;
 
 import androidx.annotation.Nullable;
@@ -16,15 +19,36 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class SearchableListDialog<T extends SearchableObject> extends DialogFragment implements SearchView.OnCloseListener {
     private RecyclerView rvItem;
     private SearchView svItem;
     private SearchableAdapter myadapter;
+    private OnItemSelectedListener onItemSelectedListener;
+    public interface OnItemSelectedListener {
+        void onItemSelected(SearchableObject item, int position);
+    }
 
+    public void setOnItemSelectedListener(OnItemSelectedListener listener) {
+        this.onItemSelectedListener = listener;
+    }
     public SearchableListDialog(SearchableAdapter adapter){
         myadapter = adapter;
+        myadapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(SearchableObject item, int position) {
+                if (onItemSelectedListener != null) {
+                    onItemSelectedListener.onItemSelected(item, position);
+                }
+            }
+    });
+        this.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(SearchableObject item, int position) {
+            }
+        });
     }
 
     @Override
@@ -56,6 +80,7 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
                 return false;
             }
         });
+
         rvItem.addItemDecoration(new DividerItemDecoration(new ContextThemeWrapper(rvItem.getContext(),R.style.Theme_SearchableSpinner), DividerItemDecoration.VERTICAL));
         rvItem.setLayoutManager(new LinearLayoutManager(getContext()));
         rvItem.setAdapter(myadapter);
@@ -73,9 +98,6 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
             }
         });
     }
-    //public void setAdapter(SearchableAdapter adapter){
-//        myadapter = adapter;
-//    }
 
     @Override
     public boolean onClose() {
