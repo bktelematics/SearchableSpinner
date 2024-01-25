@@ -8,38 +8,20 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 
 public class SearchableSpinner<T> extends Spinner  implements SearchableListDialog.OnItemSelectedListener {
-    public static final int NO_ITEM_SELECTED = -1;
     private Context _context;
     private SearchableListDialog _searchableListDialog;
-    private String _strHintText;
-
-//    public SearchableSpinner(Context context) {
-//        super(context);
-//    }
 
     public SearchableSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
         this._context = context;
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SearchableSpinner);
-        final int N = a.getIndexCount();
-        for (int i = 0; i < N; ++i) {
-            int attr = a.getIndex(i);
-            if (attr == R.styleable.SearchableSpinner_hintText) {
-                _strHintText = a.getString(attr);
-            }
-        }
-        a.recycle();
     }
 
-    public SearchableSpinner(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this._context = context;
-    }
     public void setAdapter(SearchableAdapter adapter) {
         _searchableListDialog = new SearchableListDialog(adapter);
         _searchableListDialog.setOnItemSelectedListener(this);
@@ -56,19 +38,11 @@ public class SearchableSpinner<T> extends Spinner  implements SearchableListDial
     }
     @Override
     public int getSelectedItemPosition() {
-        if (!TextUtils.isEmpty(_strHintText)) {
-            return NO_ITEM_SELECTED;
-        } else {
             return super.getSelectedItemPosition();
-        }
     }
     @Override
     public Object getSelectedItem() {
-        if (!TextUtils.isEmpty(_strHintText)) {
-            return null;
-        } else {
             return super.getSelectedItem();
-        }
     }
 
     @Override

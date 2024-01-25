@@ -29,13 +29,9 @@ public abstract class SearchableAdapter<SearchableObject extends com.bk.searchab
             }
         });
     }
+    public void updateData(List<SearchableObject> newData) {
+        getItems().clear();
+        getItems().addAll(newData);
     }
-    //    public void updateData(List<SearchableObject> newData) {
-//        // Customize this based on your needs
-//        //DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new MyDiffCallback(items, newData));
-//        items.clear();
-//        items.addAll(newData);
-//        this.setItems(items);
-//       // diffResult.dispatchUpdatesTo(this);
-//    }
+    }
 

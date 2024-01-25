@@ -1,8 +1,11 @@
 package com.bk.searchablespinner;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -119,18 +122,5 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
             }
         }
         //myadapter.updateData(filteredList);
-
-//        for (T item : myadapter.getItems()) {
-//            String itemText = item.toSearchableString();
-//            if (itemText.toLowerCase().contains(text.toLowerCase())) {
-//                filteredList.add(item);
-//            }
-//        }
-//        if (myadapter instanceof FilterableAdapter) {
-//            ((FilterableAdapter<T>) myadapter).updateData(filteredList);
-//        }
     }
-
-
-
 }
