@@ -1,17 +1,20 @@
 package com.bk.searchablespinner;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SearchableAdapter<SearchableObject extends com.bk.searchablespinner.SearchableObject, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH>{
     private OnItemClickListener onItemClickListener;
-
+    List<SearchableObject> originalList ;
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
     }
@@ -29,9 +32,16 @@ public abstract class SearchableAdapter<SearchableObject extends com.bk.searchab
             }
         });
     }
-    public void updateData(List<SearchableObject> newData) {
-        getItems().clear();
-        getItems().addAll(newData);
+
+    public void updateData(List<Object> filteredData) {
+        List<SearchableObject> newItems = new ArrayList<>();
+        for (Object item : filteredData) {
+                newItems.add((SearchableObject) item);
+        }
+        originalList = this.getItems();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SearchableDiffCallback(originalList, newItems));
+        originalList = newItems; // Update the originalList
+        diffResult.dispatchUpdatesTo(this);
     }
     }
 

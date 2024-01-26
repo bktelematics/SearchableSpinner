@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -18,18 +19,28 @@ import android.widget.SearchView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class SearchableListDialog<T extends SearchableObject> extends DialogFragment implements SearchView.OnCloseListener {
+public class SearchableListDialog<T extends SearchableObject> extends DialogFragment implements SearchView.OnCloseListener,  SearchView.OnQueryTextListener {
     private RecyclerView rvItem;
     private SearchView svItem;
     private SearchableAdapter myadapter;
     private OnItemSelectedListener onItemSelectedListener;
+    private OnSearchTextChanged _onSearchTextChanged;
+    public static  List<SearchableObject> originalList ;
+
+
+    public interface OnSearchTextChanged {
+        void onSearchTextChanged(String strText);
+    }
+
     public interface OnItemSelectedListener {
         void onItemSelected(SearchableObject item, int position);
     }
@@ -37,7 +48,12 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
     public void setOnItemSelectedListener(OnItemSelectedListener listener) {
         this.onItemSelectedListener = listener;
     }
-    public SearchableListDialog(SearchableAdapter adapter){
+
+    public void setOnSearchTextChangedListener(OnSearchTextChanged onSearchTextChanged) {
+        this._onSearchTextChanged = onSearchTextChanged;
+    }
+
+    public SearchableListDialog(SearchableAdapter adapter) {
         myadapter = adapter;
         myadapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -46,17 +62,7 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
                     onItemSelectedListener.onItemSelected(item, position);
                 }
             }
-    });
-        this.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(SearchableObject item, int position) {
-            }
         });
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -67,10 +73,11 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
         return view;
     }
 
-    public void HideKeyboard(View view){
+    public void HideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -83,23 +90,32 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
                 return false;
             }
         });
-
-        rvItem.addItemDecoration(new DividerItemDecoration(new ContextThemeWrapper(rvItem.getContext(),R.style.Theme_SearchableSpinner), DividerItemDecoration.VERTICAL));
+        svItem.setOnQueryTextListener(this);
+        rvItem.addItemDecoration(new DividerItemDecoration(new ContextThemeWrapper(rvItem.getContext(), R.style.Theme_SearchableSpinner), DividerItemDecoration.VERTICAL));
         rvItem.setLayoutManager(new LinearLayoutManager(getContext()));
         rvItem.setAdapter(myadapter);
+    }
 
-        svItem.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        svItem.clearFocus();
+        return true;
+    }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filter(newText);
-                return true;
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        filter(newText);
+        return true;
+    }
+    private void filter(String text) {
+        List<Object> filteredList = new ArrayList<>();
+        for (Object item : myadapter.getItems()) {
+            String itemText = ((SearchableObject)item).toSearchableString();
+            if (itemText.toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(item);
             }
-        });
+        }
+        myadapter.updateData(filteredList);
     }
 
     @Override
@@ -112,15 +128,5 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
     {
         super.onPause();
         dismiss();
-    }
-    private void filter(String text) {
-        ArrayList<SearchableObject> filteredList = new ArrayList<>();
-        for (Object item : myadapter.getItems()) {
-            String itemText = ((SearchableObject)item).toSearchableString();
-            if (itemText.toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add((SearchableObject) item);
-            }
-        }
-        //myadapter.updateData(filteredList);
     }
 }
