@@ -33,7 +33,8 @@ public class SearchableDiffCallback extends DiffUtil.Callback {
 public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
     Object oldItem = oldList.get(oldItemPosition);
     Object newItem = newList.get(newItemPosition);
-    return oldItem.equals(newItem);
+    boolean test =((SearchableObject) oldItem).toSearchableString().equals(((SearchableObject) newItem).toSearchableString());
+    return ((SearchableObject) oldItem).toSearchableString().equals(((SearchableObject) newItem).toSearchableString());
 }
 
 }

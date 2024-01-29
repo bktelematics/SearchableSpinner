@@ -34,7 +34,8 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
     private SearchableAdapter myadapter;
     private OnItemSelectedListener onItemSelectedListener;
     private OnSearchTextChanged _onSearchTextChanged;
-    public static  List<SearchableObject> originalList ;
+    private List<SearchableObject> originalList;
+    private List<SearchableObject> currentList;
 
 
     public interface OnSearchTextChanged {
@@ -55,11 +56,14 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
 
     public SearchableListDialog(SearchableAdapter adapter) {
         myadapter = adapter;
+        originalList = new ArrayList<>(myadapter.getItems());
+        currentList = new ArrayList<>(originalList);
         myadapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(SearchableObject item, int position) {
                 if (onItemSelectedListener != null) {
                     onItemSelectedListener.onItemSelected(item, position);
+                    HideKeyboard(requireView());
                 }
             }
         });
@@ -70,10 +74,12 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
         View view = inflater.inflate(R.layout.searchable_spinner, container);
         svItem = view.findViewById(R.id.svItem);
         rvItem = view.findViewById(R.id.rvItem);
+        svItem.setQuery("",false);
+        svItem.clearFocus();
         return view;
     }
 
-    public void HideKeyboard(View view) {
+    public static void HideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
@@ -83,6 +89,8 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
         super.onViewCreated(view, savedInstanceState);
         svItem = view.findViewById(R.id.svItem);
         rvItem = view.findViewById(R.id.rvItem);
+        svItem.setQuery("",false);
+        svItem.clearFocus();
         rvItem.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -98,8 +106,8 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        svItem.clearFocus();
-        return true;
+        svItem.setQuery("",true);
+        return false;
     }
 
     @Override
@@ -107,16 +115,19 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
         filter(newText);
         return true;
     }
+
     private void filter(String text) {
-        List<Object> filteredList = new ArrayList<>();
-        for (Object item : myadapter.getItems()) {
-            String itemText = ((SearchableObject)item).toSearchableString();
+        List<SearchableObject> filteredList = new ArrayList<>();
+        for (SearchableObject item : originalList) {
+            String itemText = item.toSearchableString();
             if (itemText.toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(item);
             }
         }
+        currentList = filteredList;
         myadapter.updateData(filteredList);
     }
+
 
     @Override
     public boolean onClose() {

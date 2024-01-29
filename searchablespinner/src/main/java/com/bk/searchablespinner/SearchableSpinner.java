@@ -1,5 +1,7 @@
 package com.bk.searchablespinner;
 
+import static com.bk.searchablespinner.SearchableListDialog.HideKeyboard;
+
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.TypedArray;
@@ -80,6 +82,7 @@ public class SearchableSpinner<T> extends Spinner  implements SearchableListDial
         ArrayAdapter arrayAdapter = new ArrayAdapter(_context, android.R.layout.simple_list_item_1, new String[]{_strHintText});
         setAdapter(arrayAdapter);
         _searchableListDialog.dismiss();
+
     }
      public Object findSpinnerItem(){
         if(localItem!=null)
