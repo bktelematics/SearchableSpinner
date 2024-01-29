@@ -40,7 +40,7 @@ public abstract class SearchableAdapter<SearchableObject extends com.bk.searchab
         }
         originalList = this.getItems();
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SearchableDiffCallback(originalList, newItems));
-        originalList = newItems; // Update the originalList
+        originalList = newItems;
         diffResult.dispatchUpdatesTo(this);
     }
     }
