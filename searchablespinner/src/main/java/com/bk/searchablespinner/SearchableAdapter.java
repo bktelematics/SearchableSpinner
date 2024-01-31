@@ -1,6 +1,8 @@
 package com.bk.searchablespinner;
 
 
+import static com.bk.searchablespinner.SearchableListDialog.HideKeyboard;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +36,7 @@ public abstract class SearchableAdapter<SearchableObject extends com.bk.searchab
             @Override
             public void onClick(View view) {
                 if (onItemClickListener != null) {
+                    HideKeyboard(view);
                     onItemClickListener.onItemClick(searchableObject, holder.getAdapterPosition());
                 }
             }

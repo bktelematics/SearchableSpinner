@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.SearchView;
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.Serializable;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,12 +60,17 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
         myadapter = adapter;
         originalList = new ArrayList<>(myadapter.getItems());
         currentList = new ArrayList<>(originalList);
+
         myadapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(SearchableObject item, int position) {
                 if (onItemSelectedListener != null) {
                     onItemSelectedListener.onItemSelected(item, position);
-                    HideKeyboard(requireView());
+                    if (svItem != null) {
+                        svItem.setQuery("", true);
+                        svItem.clearFocus();
+                    }
+
                 }
             }
         });
@@ -74,12 +81,10 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
         View view = inflater.inflate(R.layout.searchable_spinner, container);
         svItem = view.findViewById(R.id.svItem);
         rvItem = view.findViewById(R.id.rvItem);
-        svItem.setQuery("",false);
-        svItem.clearFocus();
         return view;
     }
 
-    public static void HideKeyboard(View view) {
+    public  static void HideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
@@ -89,8 +94,8 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
         super.onViewCreated(view, savedInstanceState);
         svItem = view.findViewById(R.id.svItem);
         rvItem = view.findViewById(R.id.rvItem);
-        svItem.setQuery("",false);
-        svItem.clearFocus();
+
+        this.setSizeOfDialog(0.95,0.95,this.requireDialog());
         rvItem.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -98,6 +103,7 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
                 return false;
             }
         });
+
         svItem.setOnQueryTextListener(this);
         rvItem.addItemDecoration(new DividerItemDecoration(new ContextThemeWrapper(rvItem.getContext(), R.style.Theme_SearchableSpinner), DividerItemDecoration.VERTICAL));
         rvItem.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -106,7 +112,6 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        svItem.setQuery("",true);
         return false;
     }
 
@@ -120,14 +125,37 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
         List<SearchableObject> filteredList = new ArrayList<>();
         for (SearchableObject item : originalList) {
             String itemText = item.toSearchableString();
-            if (itemText.toLowerCase().contains(text.toLowerCase())) {
+            if (ConvertString(itemText.toString()).contains(ConvertString(text.toString()))) {
                 filteredList.add(item);
             }
         }
         currentList = filteredList;
         myadapter.updateData(filteredList);
     }
-
+    public  void setSizeOfDialog(double widthPercentage, double heightPercentage, Dialog dialog) {
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) dialog.getContext().getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(displaymetrics);
+        int width = (int) (displaymetrics.widthPixels * widthPercentage);
+        int height = (int) (displaymetrics.heightPixels * heightPercentage);
+        dialog.getWindow().setLayout(width,height);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawable(this.getContext().getDrawable(R.drawable.round_background));
+    }
+    private  String RemoveAccents(String txt){
+        String ret = "";
+        ret = Normalizer.normalize(txt, Normalizer.Form.NFD).replace(toRegex("\\p{Mn}+"), "");
+        return ret;
+    }
+    private  String toRegex(String name) {
+        return name.replace(".", "\\.");
+    }
+    private  String ConvertString(String txt){
+        String ret = "";
+        if(txt!=null)
+            ret=RemoveAccents(txt).toUpperCase().trim();
+        return ret;
+    }
 
     @Override
     public boolean onClose() {

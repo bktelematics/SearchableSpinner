@@ -1,13 +1,15 @@
 package com.bk.searchablespinner;
 
-import static com.bk.searchablespinner.SearchableListDialog.HideKeyboard;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.fragment.app.DialogFragment;
 
 import java.util.List;
 
@@ -23,6 +26,7 @@ public class SearchableSpinner<T> extends Spinner  implements SearchableListDial
     private SearchableListDialog _searchableListDialog;
     private String _strHintText;
     SearchableObject localItem;
+    private int customDropdownLayoutResource = R.layout.custm_spinner_dropdown_item;
 
     public SearchableSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -40,6 +44,9 @@ public class SearchableSpinner<T> extends Spinner  implements SearchableListDial
     public void setOnSearchTextChangedListener(SearchableListDialog.OnSearchTextChanged onSearchTextChanged) {
         _searchableListDialog.setOnSearchTextChangedListener(onSearchTextChanged);
     }
+    public void setCustomDropdownLayoutResource(int layoutResource) {
+        customDropdownLayoutResource = layoutResource;
+    }
     public void setAdapter(SearchableAdapter adapter, int position) {
         _searchableListDialog = new SearchableListDialog(adapter);
         _searchableListDialog.setOnItemSelectedListener(this);
@@ -47,12 +54,12 @@ public class SearchableSpinner<T> extends Spinner  implements SearchableListDial
         if(position>=0){
             Object selectedItem = adapter.getItems().get(position);
             SearchableObject obj = (SearchableObject) selectedItem;
-            ArrayAdapter arrayAdapter = new ArrayAdapter(_context, android.R.layout.simple_list_item_1, new String[]{obj.toSetOnSpinner()});
+            ArrayAdapter arrayAdapter = new ArrayAdapter(_context, customDropdownLayoutResource, new String[]{obj.toSetOnSpinner()});
             setAdapter(arrayAdapter);
         }
         else{
             if(_strHintText!=null){
-                ArrayAdapter arrayAdapter = new ArrayAdapter(_context, android.R.layout.simple_list_item_1, new String[]{_strHintText});
+                ArrayAdapter arrayAdapter = new ArrayAdapter(_context,customDropdownLayoutResource, new String[]{_strHintText});//custm_spinner_dropdown_item
                 setAdapter(arrayAdapter);
             }
         }
@@ -72,17 +79,16 @@ public class SearchableSpinner<T> extends Spinner  implements SearchableListDial
         if (!_searchableListDialog.isAdded()) {
             _searchableListDialog.show(scanForActivity(_context).getSupportFragmentManager(), "SearchableListDialog");
         }
-        return super.performClick();
+        return true;
     }
 
     @Override
     public void onItemSelected(SearchableObject item, int position) {
         this.localItem =item;
         _strHintText = item.toSetOnSpinner(); //εδω να βαζει ο χρηστης τι θελει να γινει display
-        ArrayAdapter arrayAdapter = new ArrayAdapter(_context, android.R.layout.simple_list_item_1, new String[]{_strHintText});
+        ArrayAdapter arrayAdapter = new ArrayAdapter(_context,customDropdownLayoutResource, new String[]{_strHintText});//simple_list_item_1
         setAdapter(arrayAdapter);
         _searchableListDialog.dismiss();
-
     }
      public Object findSpinnerItem(){
         if(localItem!=null)
