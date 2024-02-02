@@ -54,6 +54,7 @@ public class SearchableSpinner<T> extends Spinner  implements SearchableListDial
         if(position>=0){
             Object selectedItem = adapter.getItems().get(position);
             SearchableObject obj = (SearchableObject) selectedItem;
+            this.localItem = obj;
             ArrayAdapter arrayAdapter = new ArrayAdapter(_context, customDropdownLayoutResource, new String[]{obj.toSetOnSpinner()});
             setAdapter(arrayAdapter);
         }
