@@ -61,7 +61,7 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
         originalList = new ArrayList<>(myadapter.getItems());
         currentList = new ArrayList<>(originalList);
 
-        myadapter.setOnItemClickListener(new OnItemClickListener() {
+        myadapter.setOnItemClickListener(new SearchableAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(SearchableObject item, int position) {
                 if (onItemSelectedListener != null) {

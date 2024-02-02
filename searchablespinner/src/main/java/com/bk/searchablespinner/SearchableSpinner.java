@@ -1,25 +1,12 @@
 package com.bk.searchablespinner;
 
-
-import android.app.Dialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.TypedArray;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.fragment.app.DialogFragment;
-
-import java.util.List;
 
 public class SearchableSpinner<T> extends Spinner  implements SearchableListDialog.OnItemSelectedListener, SearchableListDialog.OnSearchTextChanged {
     private Context _context;
