@@ -73,12 +73,12 @@ public class SearchableSpinner<T> extends Spinner  implements SearchableListDial
     @Override
     public void onItemSelected(SearchableObject item, int position) {
         this.localItem =item;
-        _strHintText = item.toSetOnSpinner(); //εδω να βαζει ο χρηστης τι θελει να γινει display
+        _strHintText = item.toSetOnSpinner();
         ArrayAdapter arrayAdapter = new ArrayAdapter(_context,customDropdownLayoutResource, new String[]{_strHintText});//simple_list_item_1
         setAdapter(arrayAdapter);
         _searchableListDialog.dismiss();
     }
-     public Object findSpinnerItem(){
+     public Object getSpinnerItem(){
         if(localItem!=null)
             return localItem;
         else

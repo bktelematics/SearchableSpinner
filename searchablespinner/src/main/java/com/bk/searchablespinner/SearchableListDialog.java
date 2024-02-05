@@ -163,8 +163,21 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
     }
 
     @Override
+    public void onResume() {
+        if (svItem != null) {
+            svItem.setQuery("", true);
+            svItem.clearFocus();
+        }
+        super.onResume();
+    }
+
+    @Override
     public void onPause()
     {
+        if (svItem != null) {
+            svItem.setQuery("", true);
+            svItem.clearFocus();
+        }
         super.onPause();
         dismiss();
     }

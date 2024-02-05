@@ -34,7 +34,7 @@
             }
         };
 
-        private final AsyncListDiffer<SearchableObject> differ;
+        public final AsyncListDiffer<SearchableObject> differ;
 
         private final int itemRowResourceId;
 
