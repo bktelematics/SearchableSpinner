@@ -4,6 +4,7 @@
     <declare-styleable name="SearchableSpinner">
         <attr name="hintText" format="string"/>
         <attr name="color" format="color"/>
+        <attr name="layoutResource" format="integer"/>
     </declare-styleable>
 
 </resources>

@@ -8,12 +8,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class SearchableSpinner<T> extends Spinner  implements SearchableListDialog.OnItemSelectedListener, SearchableListDialog.OnSearchTextChanged {
+public class SearchableSpinner<T> extends Spinner  implements OnItemClickListener{
     private Context _context;
     private SearchableListDialog _searchableListDialog;
     private String _strHintText;
-    SearchableObject localItem;
-    private int customDropdownLayoutResource = R.layout.custm_spinner_dropdown_item;
+    private int _layoutResource;
+    SearchableObject obj;
 
     public SearchableSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -24,31 +24,29 @@ public class SearchableSpinner<T> extends Spinner  implements SearchableListDial
             int attr = a.getIndex(i);
             if (attr == R.styleable.SearchableSpinner_hintText) {
                 _strHintText = a.getString(attr);
+            } else if (attr == R.styleable.SearchableSpinner_layoutResource) {
+                _layoutResource = a.getResourceId(attr, 0);
             }
         }
         a.recycle();
     }
-    public void setOnSearchTextChangedListener(SearchableListDialog.OnSearchTextChanged onSearchTextChanged) {
-        _searchableListDialog.setOnSearchTextChangedListener(onSearchTextChanged);
-    }
-    public void setCustomDropdownLayoutResource(int layoutResource) {
-        customDropdownLayoutResource = layoutResource;
+
+    private void setInitialTextToSpinner(String text){
+        ArrayAdapter arrayAdapter = new ArrayAdapter(_context,_layoutResource, new String[]{text});
+        setAdapter(arrayAdapter);
     }
     public void setAdapter(SearchableAdapter adapter, int position) {
         _searchableListDialog = new SearchableListDialog(adapter);
-        _searchableListDialog.setOnItemSelectedListener(this);
-        _searchableListDialog.setOnSearchTextChangedListener(this);
+        _searchableListDialog.setOnItemClickListener(this);
         if(position>=0){
             Object selectedItem = adapter.getItems().get(position);
             SearchableObject obj = (SearchableObject) selectedItem;
-            this.localItem = obj;
-            ArrayAdapter arrayAdapter = new ArrayAdapter(_context, customDropdownLayoutResource, new String[]{obj.toSetOnSpinner()});
-            setAdapter(arrayAdapter);
+            setSelection(position);
+            setInitialTextToSpinner(obj.getSelectedItemText());
         }
         else{
             if(_strHintText!=null){
-                ArrayAdapter arrayAdapter = new ArrayAdapter(_context,customDropdownLayoutResource, new String[]{_strHintText});//custm_spinner_dropdown_item
-                setAdapter(arrayAdapter);
+                setInitialTextToSpinner(_strHintText);
             }
         }
     }
@@ -69,23 +67,24 @@ public class SearchableSpinner<T> extends Spinner  implements SearchableListDial
         }
         return true;
     }
-
     @Override
-    public void onItemSelected(SearchableObject item, int position) {
-        this.localItem =item;
-        _strHintText = item.toSetOnSpinner();
-        ArrayAdapter arrayAdapter = new ArrayAdapter(_context,customDropdownLayoutResource, new String[]{_strHintText});//simple_list_item_1
-        setAdapter(arrayAdapter);
-        _searchableListDialog.dismiss();
-    }
-     public Object getSpinnerItem(){
-        if(localItem!=null)
-            return localItem;
-        else
+    public Object getSelectedItem() {
+        // Ensure that the adapter is not null
+        if (getAdapter() != null && getAdapter().getCount() > 0) {
+//            // Get the selected position and return the item at that position
+//            int position = getSelectedItemPosition();
+//            return getAdapter().getItem(position);
+            return obj;
+        } else {
             return null;
-     }
-    @Override
-    public void onSearchTextChanged(String strText) {
+        }
+    }
 
+    @Override
+    public void onItemClicked(SearchableObject item, int position) {
+        this.setSelection(position);
+        obj = item;
+        this.setInitialTextToSpinner(item.getSelectedItemText());
+        _searchableListDialog.dismiss();
     }
 }

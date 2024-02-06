@@ -1,6 +1,7 @@
     package com.bk.searchablespinner;
+    import static com.bk.searchablespinner.Util.ConvertString;
+    import static com.bk.searchablespinner.Util.HideKeyboard;
 
-    import static com.bk.searchablespinner.SearchableListDialog.HideKeyboard;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.ViewGroup;
@@ -8,6 +9,8 @@
     import androidx.recyclerview.widget.DiffUtil;
     import androidx.recyclerview.widget.AsyncListDiffer;
     import androidx.recyclerview.widget.RecyclerView;
+
+    import java.util.ArrayList;
     import java.util.List;
 
     public class SearchableAdapter<SearchableObject extends com.bk.searchablespinner.SearchableObject> extends RecyclerView.Adapter<SearchableAdapter.MyViewHolder> {
@@ -18,10 +21,6 @@
             }
         }
 
-        public interface OnItemClickListener {
-            void onItemClick(com.bk.searchablespinner.SearchableObject item, int position);
-        }
-
         private final DiffUtil.ItemCallback<SearchableObject> differCallback = new DiffUtil.ItemCallback<SearchableObject>() {
             @Override
             public boolean areItemsTheSame(@NonNull SearchableObject oldItem, @NonNull SearchableObject newItem) {
@@ -30,11 +29,12 @@
 
             @Override
             public boolean areContentsTheSame( @NonNull SearchableObject oldItem, @NonNull SearchableObject newItem) {
-                return oldItem.toSearchableString().equals(newItem.toSearchableString());
+                return oldItem.getFilterableText().equals(newItem.getFilterableText());
             }
         };
 
-        public final AsyncListDiffer<SearchableObject> differ;
+        private final AsyncListDiffer<SearchableObject> differ;
+        private List<SearchableObject> _initialList;
 
         private final int itemRowResourceId;
 
@@ -47,16 +47,20 @@
         public List<SearchableObject> getItems() {
             return differ.getCurrentList();
         }
+        public List<SearchableObject> getInitialList() {
+            return _initialList;
+        }
 
         @Override
         public int getItemCount() {
             return differ.getCurrentList().size();
         }
 
-        public SearchableAdapter(int itemRowResourceId, List<SearchableObject> items) {
+        public SearchableAdapter(int itemRowResourceId, List<SearchableObject> initialList) {
             this.itemRowResourceId = itemRowResourceId;
             differ = new AsyncListDiffer<>(this, differCallback);
-            differ.submitList(items);
+            _initialList = initialList;
+            differ.submitList(initialList);
         }
 
         @NonNull
@@ -71,13 +75,21 @@
         public void onBindViewHolder(@NonNull SearchableAdapter.MyViewHolder holder, int position) {
             SearchableObject searchableObject = getItems().get(holder.getAdapterPosition());
             holder.itemView.setOnClickListener(view -> {
-                if (onItemClickListener != null) {HideKeyboard(view);
-                    onItemClickListener.onItemClick(searchableObject, holder.getAdapterPosition());
+                if (onItemClickListener != null) {
+                    HideKeyboard(view);
+                    onItemClickListener.onItemClicked(searchableObject, holder.getAdapterPosition());
                 }
             });
         }
 
-        public void updateData(List<SearchableObject> filteredData) {
-            differ.submitList(filteredData);
+        public void updateData(String text) {
+            List<SearchableObject> filteredList = new ArrayList<>();
+            for (SearchableObject searchableObject : _initialList) {
+                String itemText = searchableObject.getFilterableText();
+                if (ConvertString(itemText).contains(ConvertString(text))) {
+                    filteredList.add(searchableObject);
+                }
+            }
+            differ.submitList(filteredList);
         }
     }
