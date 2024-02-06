@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
         android:queryHint="Αναζήτηση..."
-        android:searchIcon="@null" />
+        android:searchIcon="@null"
+        android:theme="@style/CustomSearchViewStyle" />
 
 
     <androidx.recyclerview.widget.RecyclerView
