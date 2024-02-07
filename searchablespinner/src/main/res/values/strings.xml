@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SearchableSpinner</string>
+    <string name="search_hint_gr">Αναζήτηση…</string>
+    <string name="search_hint_en">Search…</string>
 </resources>

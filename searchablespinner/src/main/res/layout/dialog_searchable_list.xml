@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:focusableInTouchMode="true"
     android:focusable="true"
     android:clickable="true">
 
-    <SearchView
-        android:id="@+id/svItem"
+    <android.widget.SearchView
+        android:id="@+id/svSLDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
-        android:queryHint="Αναζήτηση..."
+        android:queryHint="@string/search_hint_gr"
         android:searchIcon="@null"
-        android:theme="@style/CustomSearchViewStyle" />
-
+        android:theme="@style/Theme.SearchableSpinner" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvItem"
+        android:id="@+id/rvSLDialog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
