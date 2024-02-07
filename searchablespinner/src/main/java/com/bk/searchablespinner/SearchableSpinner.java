@@ -13,7 +13,6 @@ public class SearchableSpinner<T> extends Spinner  implements OnItemClickListene
     private SearchableListDialog _searchableListDialog;
     private String _strHintText;
     private int _layoutResource;
-    SearchableObject obj;
 
     public SearchableSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -30,7 +29,10 @@ public class SearchableSpinner<T> extends Spinner  implements OnItemClickListene
         }
         a.recycle();
     }
-
+    private void setInitialObjectToSpinner(SearchableObject myObject){
+        ArrayAdapter<SearchableObject> arrayAdapter = new ArrayAdapter<>(_context, _layoutResource, new SearchableObject[]{myObject});
+        setAdapter(arrayAdapter);
+    }
     private void setInitialTextToSpinner(String text){
         ArrayAdapter arrayAdapter = new ArrayAdapter(_context,_layoutResource, new String[]{text});
         setAdapter(arrayAdapter);
@@ -41,8 +43,7 @@ public class SearchableSpinner<T> extends Spinner  implements OnItemClickListene
         if(position>=0){
             Object selectedItem = adapter.getItems().get(position);
             SearchableObject obj = (SearchableObject) selectedItem;
-            setSelection(position);
-            setInitialTextToSpinner(obj.getSelectedItemText());
+            setInitialObjectToSpinner(obj);
         }
         else{
             if(_strHintText!=null){
@@ -67,24 +68,10 @@ public class SearchableSpinner<T> extends Spinner  implements OnItemClickListene
         }
         return true;
     }
-    @Override
-    public Object getSelectedItem() {
-        // Ensure that the adapter is not null
-        if (getAdapter() != null && getAdapter().getCount() > 0) {
-//            // Get the selected position and return the item at that position
-//            int position = getSelectedItemPosition();
-//            return getAdapter().getItem(position);
-            return obj;
-        } else {
-            return null;
-        }
-    }
 
     @Override
     public void onItemClicked(SearchableObject item, int position) {
-        this.setSelection(position);
-        obj = item;
-        this.setInitialTextToSpinner(item.getSelectedItemText());
+        setInitialObjectToSpinner(item);
         _searchableListDialog.dismiss();
     }
 }

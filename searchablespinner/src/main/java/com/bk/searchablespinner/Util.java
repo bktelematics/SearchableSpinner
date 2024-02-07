@@ -1,7 +1,10 @@
 package com.bk.searchablespinner;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import java.text.Normalizer;
@@ -25,5 +28,15 @@ public class Util {
     public  static void HideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+    public  static void setSizeOfDialog(Context context, double widthPercentage, double heightPercentage, Dialog dialog) {
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) dialog.getContext().getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(displaymetrics);
+        int width = (int) (displaymetrics.widthPixels * widthPercentage);
+        int height = (int) (displaymetrics.heightPixels * heightPercentage);
+        dialog.getWindow().setLayout(width,height);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawable(context.getDrawable(R.drawable.round_background));
     }
 }
