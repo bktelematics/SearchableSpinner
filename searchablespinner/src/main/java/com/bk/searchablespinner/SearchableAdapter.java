@@ -39,13 +39,9 @@
         private final int itemRowResourceId;
 
         private OnItemClickListener onItemClickListener;
-        private OnTextSearchedListener onTextSearchedListener;
 
         public void setOnItemClickListener(OnItemClickListener listener) {
             this.onItemClickListener = listener;
-        }
-        public void setOnTextSearchedListener(OnTextSearchedListener listener) {
-            this.onTextSearchedListener = listener;
         }
 
         public List<SearchableObject> getItems() {

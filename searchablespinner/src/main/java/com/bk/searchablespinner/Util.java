@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.appcompat.content.res.AppCompatResources;
+
 import java.text.Normalizer;
 
 public class Util {
@@ -29,7 +31,7 @@ public class Util {
         InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-    public  static void setSizeOfDialog(Context context, double widthPercentage, double heightPercentage, Dialog dialog) {
+    public  static void setSizeOfDialog(double widthPercentage, double heightPercentage, Dialog dialog) {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) dialog.getContext().getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(displaymetrics);
@@ -37,6 +39,6 @@ public class Util {
         int height = (int) (displaymetrics.heightPixels * heightPercentage);
         dialog.getWindow().setLayout(width,height);
         dialog.setCanceledOnTouchOutside(false);
-        dialog.getWindow().setBackgroundDrawable(context.getDrawable(R.drawable.round_background));
+        dialog.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(dialog.getContext(), R.drawable.round_background));
     }
 }

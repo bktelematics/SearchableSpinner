@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SearchableListDialog<T extends SearchableObject> extends DialogFragment implements SearchView.OnQueryTextListener{
+public class SearchableListDialog<T extends SearchableObject> extends DialogFragment {
     private RecyclerView recyclerView;
     private SearchView searchView;
     private SearchableAdapter myadapter;
@@ -63,7 +63,18 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
                 return false;
             }
         });
-        searchView.setOnQueryTextListener(this);
+    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String s) {
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String s) {
+            filter(s);
+            return false;
+        }
+    });
         recyclerView.addItemDecoration(new DividerItemDecoration(new ContextThemeWrapper(recyclerView.getContext(), R.style.Theme_SearchableSpinner), DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(myadapter);
@@ -75,17 +86,7 @@ public class SearchableListDialog<T extends SearchableObject> extends DialogFrag
 
     @Override
     public void onResume() {
-      setSizeOfDialog(requireContext(),0.95,0.95,this.requireDialog());
+        setSizeOfDialog(0.95,0.95,this.requireDialog());
         super.onResume();
-    }
-        @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        filter(newText);
-        return true;
     }
 }
