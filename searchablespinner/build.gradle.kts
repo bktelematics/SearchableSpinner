@@ -1,5 +1,10 @@
-import java.io.FileInputStream
 import java.util.Properties
+
+val publishVersion = "1.0.1"
+
+val group = "com.bk"
+val artifact = "searchablespinner"
+val localProperties = Properties()
 
 plugins {
     id ("com.android.library")
@@ -46,27 +51,30 @@ dependencies {
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
 
 }
-val localProperties = Properties()
-localProperties.load(FileInputStream(rootProject.file("local.properties")))
-afterEvaluate {
-    publishing {
-        publications {
-            register("release", MavenPublication::class) {
-                groupId = "com.bk"
-                artifactId = "searchablespinner"
-                version = "1.0.0"
-                artifact("$buildDir/outputs/aar/searchablespinner-release.aar")
 
-                repositories{
-                    maven{
-                        name ="GitHubPackages"
-                        url  = uri("https://maven.pkg.github.com/bktelematics/SearchableSpinner")
-                        credentials {
-                            username = "bktelematics"
-                            password = localProperties.getProperty("GITHUB_TOKEN")
-                        }
-                    }
-                }
+// Configure the publishing task to publish the artifact
+publishing {
+    publications {
+        // Configure a Maven publication for your library
+        register<MavenPublication>("release") {
+            // Define the coordinates for your library
+            groupId = group
+            artifactId = artifact
+            version = publishVersion
+            afterEvaluate{
+                from(components["release"])
+            }
+        }
+    }
+
+    // Configure the repository to publish to (e.g., GitHub Packages)
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url  = uri("https://maven.pkg.github.com/bktelematics/SearchableSpinner")
+            credentials {
+                username = localProperties.getProperty("gpk.username")?: ""
+                password =localProperties.getProperty("gpk.password")?: ""
             }
         }
     }
