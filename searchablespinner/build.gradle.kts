@@ -43,15 +43,34 @@ android {
         }
     }
 }
+
 afterEvaluate {
     publishing {
         publications {
             register("release", MavenPublication::class) {
-                from(components["release"])
                 groupId = "com.bk"
                 artifactId = "searchablespinner"
                 version = "1.0.0"
+
+                from(components["release"])
+                artifact("$buildDir/outputs/aar/searchablespinner-release.aar")
+
+                pom {
+                    withXml {
+                        val dependenciesNode = asNode().appendNode("dependencies")
+
+                        project.configurations["implementation"].allDependencies.forEach { dep ->
+                            if (dep.group != null || dep.name != null || dep.version != null || dep.name == "unspecified") return@forEach
+
+                            val dependencyNode = dependenciesNode.appendNode("dependency")
+                            dependencyNode.appendNode("groupId", dep.group)
+                            dependencyNode.appendNode("artifactId", dep.name)
+                            dependencyNode.appendNode("version", dep.version)
+                        }
+                    }
+                }
             }
         }
     }
 }
+

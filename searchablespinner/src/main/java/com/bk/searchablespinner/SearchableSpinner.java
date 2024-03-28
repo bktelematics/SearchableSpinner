@@ -32,15 +32,28 @@ public class SearchableSpinner extends Spinner {
 
     public void init(SearchableAdapter adapter, int selectedItemPosition) {
         _searchableAdapter = adapter;
-        _selectedItemPosition = selectedItemPosition;
-
-        SearchableObject searchableObject = (SearchableObject) _searchableAdapter.getItems().get(_selectedItemPosition);
-        setSelectedItem(searchableObject);
+        if (selectedItemPosition == -1) {
+            _selectedItemPosition = 0;
+        } else {
+            _selectedItemPosition = selectedItemPosition;
+        }
+        if(adapter.getItems().size()==0){
+            setSelectedItem(null);
+        }
+        else{
+            SearchableObject searchableObject = (SearchableObject) _searchableAdapter.getItems().get(_selectedItemPosition);
+            setSelectedItem(searchableObject);
+        }
     }
 
     public void setSelectedItem (SearchableObject searchableObject){
-        ArrayAdapter<SearchableObject> arrayAdapter = new ArrayAdapter<>(_context, _layoutResource, new SearchableObject[]{ searchableObject });
-        setAdapter(arrayAdapter);
+        if(searchableObject==null){
+            ArrayAdapter<SearchableObject> emptyAdapter = new ArrayAdapter<>(_context, android.R.layout.simple_spinner_dropdown_item, new SearchableObject[]{});
+            setAdapter(emptyAdapter);
+        }else{
+            ArrayAdapter<SearchableObject> arrayAdapter = new ArrayAdapter<>(_context, _layoutResource, new SearchableObject[]{ searchableObject });
+            setAdapter(arrayAdapter);
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
