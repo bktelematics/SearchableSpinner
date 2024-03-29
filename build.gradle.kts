@@ -2,3 +2,7 @@
 plugins {
     id("com.android.library") version "8.2.2" apply false
 }
+
+subprojects {
+    apply(plugin = "com.android.library")
+}
