@@ -15,7 +15,6 @@ public class SearchableSpinner extends Spinner {
     private final static String FRAGMENT_TAG = "FRAGMENT_SEARCHABLE_SPINNER";
     private int _layoutResource;
 
-
     public SearchableSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
         this._context = context;
