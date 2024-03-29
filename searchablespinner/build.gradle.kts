@@ -1,3 +1,4 @@
+import java.io.FileInputStream
 import java.util.Properties
 
 val publishVersion = "1.0.1"
@@ -5,6 +6,7 @@ val publishVersion = "1.0.1"
 val group = "com.bk"
 val artifact = "searchablespinner"
 val localProperties = Properties()
+localProperties.load(FileInputStream(rootProject.file("local.properties")))
 
 plugins {
     id ("com.android.library")
@@ -74,7 +76,7 @@ publishing {
             url  = uri("https://maven.pkg.github.com/bktelematics/SearchableSpinner")
             credentials {
                 username = localProperties.getProperty("gpk.username")?: ""
-                password =localProperties.getProperty("gpk.token")?: ""
+                password = localProperties.getProperty("gpk.token")?: ""
             }
         }
     }
