@@ -74,7 +74,7 @@ publishing {
             url  = uri("https://maven.pkg.github.com/bktelematics/SearchableSpinner")
             credentials {
                 username = localProperties.getProperty("gpk.username")?: ""
-                password =localProperties.getProperty("gpk.password")?: ""
+                password =localProperties.getProperty("gpk.token")?: ""
             }
         }
     }
