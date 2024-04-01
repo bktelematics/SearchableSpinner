@@ -19,7 +19,7 @@ android {
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        version = "1.0.3" // Use the version directly here
+        version = "1.0.4" // Use the version directly here
     }
 
     buildTypes {
@@ -40,6 +40,7 @@ android {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.android.tools.build:gradle:7.0.4")// Use a version compatible with Java 8
     implementation("com.google.android.material:material:1.4.0") // Update Material version for compatibility
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
