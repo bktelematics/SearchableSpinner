@@ -51,7 +51,7 @@ publishing {
     publications {
         // Define a publication named "release" for JitPack
         register<MavenPublication>("release") {
-            from(components["release"])
+            //from(components["release"])
 
             // Configure the coordinates of the published artifact
             groupId = "com.github.bktelematics" // Replace with your GitHub username
