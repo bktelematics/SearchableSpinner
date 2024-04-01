@@ -55,7 +55,7 @@ publishing {
 
             // Configure the coordinates of the published artifact
             groupId = "com.github.bktelematics" // Replace with your GitHub username
-            artifactId = "serachablespinner" // Replace with your artifact ID
+            artifactId = "searchablespinner" // Replace with your artifact ID
             version = "1.0.2"
         }
     }
