@@ -1,4 +1,0 @@
-android:
-  components:
-    gradle:
-      version: 7.0.0 # Or any version compatible with Java 8

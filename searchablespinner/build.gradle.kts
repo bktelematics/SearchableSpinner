@@ -48,22 +48,41 @@ dependencies {
 }
 
 // Configure publication to JitPack
-publishing {
-    publications {
-        // Define a publication named "release" for JitPack
+//publishing {
+//    publications {
+//        // Define a publication named "release" for JitPack
+//        register<MavenPublication>("release") {
+//            //from(components["release"])
+//
+//            // Configure the coordinates of the published artifact
+//            groupId = "com.github.bktelematics" // Replace with your GitHub username
+//            artifactId = "searchablespinner" // Replace with your artifact ID
+//            version = "1.0.2"
+//        }
+//    }
+//    repositories {
+//        maven { url = uri("https://jitpack.io") }
+//    }
+//}
+
+afterEvaluate{
+    publishing{
+        publications{
         register<MavenPublication>("release") {
             //from(components["release"])
 
             // Configure the coordinates of the published artifact
             groupId = "com.github.bktelematics" // Replace with your GitHub username
             artifactId = "searchablespinner" // Replace with your artifact ID
-            version = "1.0.2"
+            version = "1.0.6"
         }
     }
     repositories {
         maven { url = uri("https://jitpack.io") }
     }
-}
+        }
+    }
+
 //plugins {
 //    id("com.android.library")
 //    id ("maven-publish")
