@@ -74,7 +74,7 @@ afterEvaluate{
             // Configure the coordinates of the published artifact
             groupId = "com.github.bktelematics" // Replace with your GitHub username
             artifactId = "searchablespinner" // Replace with your artifact ID
-            version = "1.0.6"
+            version = "1.0.7"
         }
     }
     repositories {
