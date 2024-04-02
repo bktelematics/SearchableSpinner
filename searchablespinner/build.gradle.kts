@@ -64,26 +64,23 @@ dependencies {
 //        maven { url = uri("https://jitpack.io") }
 //    }
 //}
+publishing {
+        publications {
+            register<MavenPublication>("release") {
+                groupId = "com.github.bktelematics" // Replace with your GitHub username
+                artifactId = "searchablespinner" // Replace with your artifact ID
+                version = "1.0.9"
 
-afterEvaluate{
-    publishing{
-        publications{
-        register<MavenPublication>("release") {
-            //from(components["release"])
+                artifact("$buildDir/outputs/aar/searchablespinner-release.aar")
 
-            // Configure the coordinates of the published artifact
-            groupId = "com.github.bktelematics" // Replace with your GitHub username
-            artifactId = "searchablespinner" // Replace with your artifact ID
-            version = "1.0.8"
-            artifact("$buildDir/outputs/aar/searchablespinner-release.aar")
+            }
+        }
 
+        repositories {
+            maven { url = uri("https://jitpack.io") }
         }
     }
-    repositories {
-        maven { url = uri("https://jitpack.io") }
-    }
-        }
-    }
+
 
 //plugins {
 //    id("com.android.library")
