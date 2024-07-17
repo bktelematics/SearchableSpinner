@@ -10,7 +10,7 @@ android {
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        version = "1.1.6" // Use the version directly here
+        version = "1.1.7" // Use the version directly here
     }
 
     buildTypes {
@@ -43,7 +43,7 @@ afterEvaluate {
             register<MavenPublication>("release") {
                 groupId = "com.github.bktelematics" // Replace with your GitHub username
                 artifactId = "searchablespinner" // Replace with your artifact ID
-                version = "1.1.6"
+                version = "1.1.7"
 
                 artifact("$buildDir/outputs/aar/searchablespinner-release.aar")
             }
