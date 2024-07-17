@@ -29,14 +29,14 @@ public class SearchableListDialog extends DialogFragment {
         searchableAdapter = adapter;
     }
 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.dialog_searchable_list, container);
-        this.svSLDialog = (SearchView)view.findViewById(R.id.svSLDialog);
-        this.rvSLDialog = (RecyclerView)view.findViewById(R.id.rvSLDialog);
         return view;
     }
     @SuppressLint({"ClickableViewAccessibility"})
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         svSLDialog = view.findViewById(R.id.svSLDialog);
