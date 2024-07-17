@@ -43,7 +43,7 @@ afterEvaluate {
             register<MavenPublication>("release") {
                 groupId = "com.github.bktelematics" // Replace with your GitHub username
                 artifactId = "searchablespinner" // Replace with your artifact ID
-                version = "1.1.1"
+                version = "1.1.2"
 
                 artifact("$buildDir/outputs/aar/searchablespinner-release.aar")
             }
