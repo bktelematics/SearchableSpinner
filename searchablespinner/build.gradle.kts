@@ -1,3 +1,5 @@
+val libVersion = "1.1.5"
+
 plugins {
     id("com.android.library")
     id("maven-publish")
@@ -10,7 +12,7 @@ android {
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        version = "1.0.5" // Use the version directly here
+        version = libVersion // Use the version directly here
     }
 
     buildTypes {
@@ -43,7 +45,7 @@ afterEvaluate {
             register<MavenPublication>("release") {
                 groupId = "com.github.bktelematics" // Replace with your GitHub username
                 artifactId = "searchablespinner" // Replace with your artifact ID
-                version = "1.1.3"
+                version = libVersion
 
                 artifact("$buildDir/outputs/aar/searchablespinner-release.aar")
             }
